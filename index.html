@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hola mundo react</title>
+  
+</head>
+<body>
+  <section id="app"></section>
+  <!-- Con react podemos crear componentes -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+  <!-- Con react-dom podemos usar esos componentes ya creados -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+  <script>
+    function Hola(props) {
+      const name = props.name;
+
+      return React.DOM.h1({
+        id: 'title',
+      }, `Hola ${name}`);//Template literal
+    }
+
+    const hola = React.createElement(Hola,{
+      name: 'John Serrano',
+    });
+
+    ReactDOM.render(
+      hola,
+      document.getElementById('app')
+    );
+
+    setTimeout( () =>{
+      ReactDOM.render(
+        React.createElement(Hola, { name: 'John Andrey' }),
+        document.getElementById('app')
+      );
+    }, 1000);
+
+  </script>
+</body>
+</html>
