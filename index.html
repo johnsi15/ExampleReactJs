@@ -7,31 +7,32 @@
 </head>
 <body>
   <section id="app"></section>
+  <!-- De esta forma usamos babel de una forma rapida pero solo para pruebas no es recomendado para trabajar -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.23.1/babel.min.js"></script>
   <!-- Con react podemos crear componentes -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
   <!-- Con react-dom podemos usar esos componentes ya creados -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
-  <script>
+  <script type="text/babel">
+    //creado nuestro componente con JSX
     function Hola(props) {
       const name = props.name;
 
-      return React.DOM.h1({
-        id: 'title',
-      }, `Hola ${name}`);//Template literal
+      return (
+        <h1 id="Title">
+          Hello {name}
+        </h1>
+      );
     }
-
-    const hola = React.createElement(Hola,{
-      name: 'John Serrano',
-    });
-
+    
     ReactDOM.render(
-      hola,
+      <Hola name="John Serrano"/>,
       document.getElementById('app')
     );
 
     setTimeout( () =>{
       ReactDOM.render(
-        React.createElement(Hola, { name: 'John Andrey' }),
+        <Hola name="Andrey Serrano"/>,
         document.getElementById('app')
       );
     }, 1000);
