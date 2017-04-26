@@ -14,13 +14,63 @@
   <!-- Con react-dom podemos usar esos componentes ya creados -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
   <script type="text/babel">
-    function Hola(props) {
+
+    function Counter(WrappedComponent) {
+      class CounterHOC extends React.Component {
+        constructor(props) {
+          super(props);
+
+          this.state = {
+            count: 0,
+          };
+
+          this.handleClick = this.handleClick.bind(this);
+        }
+
+        getChildContext() {
+          return {
+            count: this.state.count,
+          };
+        }
+
+        handleClick() {
+          this.setState({
+            count: this.state.count + 1,
+          });
+        }
+
+        render() {
+          return (
+            <WrappedComponent
+              onClick={this.handleClick}
+              {...this.props}
+            />
+          )
+        }
+      }
+
+      CounterHOC.childContextTypes = {
+        count: React.PropTypes.number,
+      };
+
+      return CounterHOC;
+    }
+
+
+
+    function Hola(props, context) {
       return (
         <h1 id="Title" onClick={props.onClick}>
-          Hello {props.name} {props.count}
+          Hola {props.name} {context.count}
         </h1>
       );
     }
+
+    Hola.contextTypes = {
+      count: React.PropTypes.number
+    };
+
+    const HolaHOC = Counter(Hola);
       
     class MiComponente extends React.Component {
       constructor(props){
@@ -31,6 +81,48 @@
         };
 
         this.handleClick = this.handleClick.bind(this);
+      }
+
+      getChildContext() {
+        return {
+          count: this.state.count,
+        };
+      }
+
+      componentWillMount() {
+        console.log('El componente se va a montar');
+      }
+
+      //escucha nuestro click dentro de todo el dom nos permite interactuar con el DOM o las otras APIs del navegador (geolocation, navigator, notificaciones, etc.) y peticiones http
+      componentDidMount() {
+        document.addEventListener('click', this.handleClick);
+      }
+      
+      //Este componente nos ayuda a update o reniciar los estados
+      //componentWillReceiveProps(nextProps) {
+      //  this.setState({
+      //    count: this.state.count * 2,
+      //  });
+      //}
+
+      // prueba si es necesario actualizar el componente
+      shouldComponentUpdate(nextProps, nextState){
+        if(nextState.count != this.state.count) return true;
+        return false;
+      }
+
+      componentWillUpdate(nextProps, nextState){
+        console.log('El componente se va actualizar');
+      }
+
+      //podemos volver a asignar algo
+      componentDidUpdate(prevProps, prevstate){
+        console.log('El componente se actualizó');
+      }
+      
+      //Limpiar eventos o eliminar algunas cosas
+      componentWillUnmount(){
+        document.removeEventListener('click', this.handleClick);
       }
 
       handleClick(){
@@ -49,9 +141,28 @@
         );
       }
     }
+
+    MiComponente.childContextTypes = {
+      count: React.PropTypes.number,
+    };
+
+    const mixin = {
+      handleClick() {
+        console.log('clickeado');
+      },
+    };
+
+    const Componente = React.createClass({
+      mixins: [
+        mixin,
+      ],
+      render() {
+        return <div onClick={this.handleClick}>hola</div>;
+      }
+    })
     
     ReactDOM.render(
-      <MiComponente name="John Serrano"/>,
+      <Componente name="John Serrano"/>,
       document.getElementById('app')
     );
 
