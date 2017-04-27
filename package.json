@@ -4,6 +4,8 @@
   "description": "Ejemplo de react comenzando proyecto",
   "main": "index.js",
   "scripts": {
+    "build": "webpack -w",
+    "start": "nodemon built/server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,7 +23,8 @@
   "homepage": "https://github.com/johnsi15/ExampleReactJs#readme",
   "dependencies": {
     "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "react-dom": "^15.5.4",
+    "react-router-dom": "^4.0.0-beta.8"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
@@ -29,6 +32,7 @@
     "babel-preset-latest-minimal": "^1.1.2",
     "babel-preset-react": "^6.24.1",
     "json-loader": "^0.5.4",
+    "nodemon": "^1.11.0",
     "webpack": "^2.4.1"
   }
 }
