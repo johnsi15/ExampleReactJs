@@ -1,8 +1,11 @@
+const path = require('path');
+
 module.exports = {
   entry: './source/server.js',
   output: {
     filename: 'index.js',
-    path: __dirname +'built/server/',
+    path: path.resolve(__dirname, '../built/server'),
+    publicPath: '/built/server/',
   },
   module: {
     loaders: [

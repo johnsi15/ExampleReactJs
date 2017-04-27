@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__webpack_require__.p = "/built/server/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 80);
@@ -8838,15 +8838,15 @@ var _server = __webpack_require__(77);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function requestHandler(request, response) {
-  const html = (0, _server.renderToString)(_react2.default.DOM.h1(null, 'Hola mundo'));
+  const html = (0, _server.renderToString)(_react2.default.DOM.h1(null, 'hola'));
 
   response.write(html);
   response.end();
-
-  const server = _http2.default.createServer(requestHandler);
-
-  server.listen(3000);
 }
+
+const server = _http2.default.createServer(requestHandler);
+
+server.listen(3000);
 
 /***/ }),
 /* 81 */
