@@ -1,5 +1,6 @@
 import React, { Component} from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import api from '../../api.js';
 
@@ -9,7 +10,7 @@ class Post extends Component{
 
     this.state = {
       loading: true,
-      user: {},
+      user: props.user || null,
       comments: [],
     };
   }
@@ -19,7 +20,7 @@ class Post extends Component{
       user,
       comments,
     ] = await Promise.all([
-      api.users.getSingle(this.props.userId),
+      !this.state.user ? api.users.getSingle(this.props.userId) : Promise.resolve(this.state.user),
       api.posts.getComments(this.props.id),
     ]);
 
@@ -40,9 +41,9 @@ class Post extends Component{
 
         {!this.state.loading && (
           <div>
-            <a href={`//${this.state.user.website}`} target="_blank" rel="nofollow">
+            <Link to={`/user/${this.state.user.id}`}>
               {this.state.user.name}
-            </a>
+            </Link>
             <span>
               hay {this.state.comments.length} comentarios
             </span>
