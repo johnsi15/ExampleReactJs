@@ -15315,6 +15315,10 @@ var _Post = __webpack_require__(121);
 
 var _Post2 = _interopRequireDefault(_Post);
 
+var _Loading = __webpack_require__(274);
+
+var _Loading2 = _interopRequireDefault(_Loading);
+
 var _api = __webpack_require__(71);
 
 var _api2 = _interopRequireDefault(_api);
@@ -15362,17 +15366,8 @@ class Home extends _react.Component {
       _react2.default.createElement(
         'section',
         null,
-        this.state.loading && _react2.default.createElement(
-          'h2',
-          null,
-          'loading posts...'
-        ),
+        this.state.loading && _react2.default.createElement(_Loading2.default, null),
         this.state.posts.map(post => _react2.default.createElement(_Post2.default, _extends({ key: post.id }, post)))
-      ),
-      _react2.default.createElement(
-        _reactRouterDom.Link,
-        { to: '/about' },
-        'Go to about'
       )
     );
   }
@@ -15391,30 +15386,71 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(17);
 
+var _Post = __webpack_require__(121);
+
+var _Post2 = _interopRequireDefault(_Post);
+
+var _Loading = __webpack_require__(274);
+
+var _Loading2 = _interopRequireDefault(_Loading);
+
+var _api = __webpack_require__(71);
+
+var _api2 = _interopRequireDefault(_api);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 // Es lo mismo que usar React.Component
 class Post extends _react.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true,
+      user: {},
+      post: {},
+      comments: []
+    };
+  }
+
+  componentDidMount() {
+    var _this = this;
+
+    return _asyncToGenerator(function* () {
+      const [post, comments] = yield Promise.all([_api2.default.posts.getSingle(_this.props.match.params.id), _api2.default.posts.getComments(_this.props.match.params.id)]);
+
+      const user = yield _api2.default.users.getSingle(post.userId);
+
+      _this.setState({
+        loading: false,
+        post,
+        user,
+        comments
+      });
+    })();
+  }
   render() {
+    if (this.state.loading) {
+      return _react2.default.createElement(_Loading2.default, null);
+    }
+
     return _react2.default.createElement(
       'section',
       { name: 'post' },
-      _react2.default.createElement(
-        'h1',
-        null,
-        'Post'
-      ),
-      _react2.default.createElement(
-        _reactRouterDom.Link,
-        { to: '/' },
-        'Go to Home'
-      )
+      _react2.default.createElement(_Post2.default, _extends({}, this.state.post, {
+        user: this.state.user,
+        comments: this.state.comments
+      }))
     );
   }
 }
@@ -15443,6 +15479,10 @@ var _reactRouterDom = __webpack_require__(17);
 var _Post = __webpack_require__(121);
 
 var _Post2 = _interopRequireDefault(_Post);
+
+var _Loading = __webpack_require__(274);
+
+var _Loading2 = _interopRequireDefault(_Loading);
 
 var _api = __webpack_require__(71);
 
@@ -15483,6 +15523,7 @@ class Profile extends _react.Component {
     return _react2.default.createElement(
       'section',
       { name: 'profile' },
+      this.state.loading && _react2.default.createElement(_Loading2.default, null),
       _react2.default.createElement(
         'h2',
         null,
@@ -15574,7 +15615,7 @@ class Post extends _react.Component {
     this.state = {
       loading: true,
       user: props.user || null,
-      comments: []
+      comments: props.comments || null
     };
   }
 
@@ -15582,7 +15623,9 @@ class Post extends _react.Component {
     var _this = this;
 
     return _asyncToGenerator(function* () {
-      const [user, comments] = yield Promise.all([!_this.state.user ? _api2.default.users.getSingle(_this.props.userId) : Promise.resolve(_this.state.user), _api2.default.posts.getComments(_this.props.id)]);
+      if (!!_this.state.user && !!_this.state.comments) return _this.setState({ loading: false });
+
+      const [user, comments] = yield Promise.all([!_this.state.user ? _api2.default.users.getSingle(_this.props.userId) : Promise.resolve(_this.state.user), !_this.state.comments ? _api2.default.posts.getComments(_this.props.id) : Promise.resolve(_this.state.comments)]);
 
       _this.setState({
         loading: false,
@@ -15597,11 +15640,15 @@ class Post extends _react.Component {
       'article',
       { id: `post-${this.props.id}` },
       _react2.default.createElement(
-        'h2',
-        null,
-        ' ',
-        this.props.title,
-        ' '
+        _reactRouterDom.Link,
+        { to: `/post/${this.props.id}` },
+        _react2.default.createElement(
+          'h2',
+          null,
+          ' ',
+          this.props.title,
+          ' '
+        )
       ),
       _react2.default.createElement(
         'p',
@@ -37572,6 +37619,33 @@ module.exports = require("util");
 /***/ (function(module, exports) {
 
 module.exports = require("zlib");
+
+/***/ }),
+/* 274 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(3);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function Loading() {
+  return _react2.default.createElement(
+    'h3',
+    null,
+    'Loading data....'
+  );
+}
+
+exports.default = Loading;
 
 /***/ })
 /******/ ]);

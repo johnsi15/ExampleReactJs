@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 import Post from '../../posts/containers/Post.jsx';
-
+import Loading from '../../shared/components/Loading.jsx';
 import api from '../../api.js';
 
 // Es lo mismo que usar React.Component
@@ -37,6 +37,9 @@ class Profile extends Component{
   render(){
     return(
       <section name="profile">
+        {this.state.loading && (
+          <Loading />
+        )}
           <h2>Profile of {this.state.user.name}</h2>
           <fieldset>
             <legend>Basic info</legend>
