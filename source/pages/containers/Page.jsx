@@ -9,10 +9,15 @@ import Post from './Post.jsx';
 import Profile from './Profile.jsx';
 import Gallery from './Gallery.jsx';
 import Error404 from './Error404.jsx';
+import Header from '../../shared/components/Header.jsx';
+
+import styles from './Page.css';
 
 function Pages(){
   return (
     <main role="application">
+      <Header />
+      
       <Switch>
         {/* List de artículos */}
         <Route

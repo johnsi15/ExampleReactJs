@@ -5,6 +5,8 @@ import Post from '../../posts/containers/Post.jsx';
 import Loading from '../../shared/components/Loading.jsx';
 import api from '../../api.js';
 
+import styles from './Page.css';
+
 // Es lo mismo que usar React.Component
 class Home extends Component{
   constructor(props){
@@ -41,7 +43,8 @@ class Home extends Component{
 
     const scrolled = window.scrollY;
     const viewportHeight = window.innerHeight;
-    const fullHeight = document.body.clientHeight;
+    // const fullHeight = document.body.clientHeight;
+    const fullHeight = document.documentElement.clientHeight;
 
     if(!(scrolled + viewportHeight + 300 >= fullHeight)){
       return null
@@ -65,16 +68,15 @@ class Home extends Component{
 
   render(){
     return(
-      <section name="Home">
+      <section name="Home" className={styles.section}>
           <h1>Home</h1>
-          <section>
+          <section className={styles.list}>
+            {this.state.posts
+              .map(post => <Post key={post.id} {...post} />
+            )}
 
             {this.state.loading && (
               <Loading />
-            )}
-
-            {this.state.posts
-              .map(post => <Post key={post.id} {...post} />
             )}
           </section>
       </section>
