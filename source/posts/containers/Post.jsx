@@ -77,7 +77,7 @@ Post.propTypes = {
     name: PropTypes.string,
   }),
   comments: PropTypes.arrayOf(
-    PropTypes.objects),
+    PropTypes.object),
 };
 
 export default Post;
