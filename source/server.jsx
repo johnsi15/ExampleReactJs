@@ -3,22 +3,22 @@ import React from 'react';
 import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 
-import Pages from './pages/containers/Page.jsx';
-import Layout from './pages/components/Layout.jsx';
+import Pages from './pages/containers/Page';
+import Layout from './pages/components/Layout';
 
-function requestHandler(request, response){
-  //Se crea un contexto
+function requestHandler(request, response) {
+  // Se crea un contexto
   const context = {};
 
   const html = renderToString(
     <StaticRouter location={request.url} context={context}>
       <Pages />
-    </StaticRouter>
+    </StaticRouter>,
   );
 
   response.setHeader('Content-Type', 'text/html');
 
-  //Validamos si se esta pidiendo una url
+  // Validamos si se esta pidiendo una url
   if (context.url) {
     response.writeHead(301, {
       Location: context.url,
@@ -28,11 +28,11 @@ function requestHandler(request, response){
 
   response.write(
     renderToStaticMarkup(
-      <Layout 
+      <Layout
         title="Aplicación"
         content={html}
-      />
-    )
+      />,
+    ),
   );
   response.end();
 }

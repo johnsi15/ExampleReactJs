@@ -17,14 +17,13 @@ function Header() {
         <a
           className={styles.link}
           href="https://platzi.com"
-          target="_blank"
-
+          target="_blank" rel="noopener noreferrer"
         >
           Platzi
         </a>
       </nav>
     </header>
-  )
+  );
 }
 
-export default Header
+export default Header;

@@ -11,6 +11,12 @@ module.exports = {
   module: {
     loaders: [
       {
+        test: /\.jsx?$/,
+        loader: 'eslint-loader',
+        enforce: 'pre',
+        exclude: /(node_modules)/,
+      },
+      {
         test: /\.json$/,
         loader: 'json-loader',
       },
@@ -34,6 +40,9 @@ module.exports = {
     ]
   },
   target: 'web',
+  resolve: {
+    extensions: ['.js', '.jsx', '.css'],
+  },
   plugins: [
 		new ExtractTextPlugin({ filename: '../statics/styles.css' }),
 	],

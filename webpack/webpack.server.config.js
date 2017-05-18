@@ -2,7 +2,7 @@ const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-  entry: './source/server.js',
+  entry: './source/server.jsx',
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, '../built/server'),
@@ -10,6 +10,12 @@ module.exports = {
   },
   module: {
     loaders: [
+      {
+        test: /\.jsx?$/,
+        loader: 'eslint-loader',
+        enforce: 'pre',
+        exclude: /(node_modules)/,
+      },
       {
         test: /\.json$/,
         loader: 'json-loader',
@@ -33,6 +39,9 @@ module.exports = {
     ]
   },
   target: 'node',
+  resolve: {
+    extensions: ['.js', '.jsx', '.css'],
+  },
   plugins: [
 		new ExtractTextPlugin({ filename: '../statics/styles.css' }),
 	],

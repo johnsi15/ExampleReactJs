@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-//El layout se puede hacer con un html normal
-function Layout(props){
-  return(
-    <html>
+// El layout se puede hacer con un html normal
+function Layout(props) {
+  return (
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <title>{props.title}</title>
@@ -21,7 +22,8 @@ function Layout(props){
         />
       </head>
       <body>
-        <div id="render-target"
+        <div
+          id="render-target"
           dangerouslySetInnetHTML={{
             __html: props.content,
           }}
@@ -31,5 +33,10 @@ function Layout(props){
     </html>
   );
 }
+
+Layout.propTypes = {
+  title: PropTypes.string,
+  content: PropTypes.string,
+};
 
 export default Layout;

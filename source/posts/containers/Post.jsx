@@ -1,12 +1,12 @@
-import React, { Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import api from '../../api.js';
-import styles from './Post.css'
+import api from '../../api';
+import styles from './Post.css';
 
-class Post extends Component{
-  constructor(props){
+class Post extends Component {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -16,26 +16,33 @@ class Post extends Component{
     };
   }
 
-  async componentDidMount(){
-    if(!!this.state.user && !!this.state.comments) return this.setState({ loading: false });
+  componentDidMount() {
+    this.initialFecth();
+  }
+
+  async initialFecth() {
+    if (!!this.state.user && !!this.state.comments) return this.setState({ loading: false });
 
     const [
       user,
       comments,
     ] = await Promise.all([
       !this.state.user ? api.users.getSingle(this.props.userId) : Promise.resolve(this.state.user),
-      !this.state.comments ? api.posts.getComments(this.props.id) : Promise.resolve(this.state.comments),
+      !this.state.comments ? (
+        api.posts.getComments(this.props.id)) : (
+        Promise.resolve(this.state.comments)
+      ),
     ]);
 
-    this.setState({
+    return this.setState({
       loading: false,
       user,
       comments,
-    })
+    });
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <article id={`post-${this.props.id}`} className={styles.post}>
         <h2 className={styles.title}>
           <Link to={`/post/${this.props.id}`}>
@@ -57,14 +64,20 @@ class Post extends Component{
           </div>
         )}
       </article>
-    )
+    );
   }
 }
 
-Post.propTypes= {
+Post.propTypes = {
   id: PropTypes.number,
+  userId: PropTypes.number,
   title: PropTypes.string,
   body: PropTypes.string,
+  user: PropTypes.shape({
+    name: PropTypes.string,
+  }),
+  comments: PropTypes.arrayOf(
+    PropTypes.objects),
 };
 
 export default Post;

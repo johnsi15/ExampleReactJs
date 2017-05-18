@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-import PostBody from '../../posts/containers/Post.jsx';
-import Loading from '../../shared/components/Loading.jsx';
-import Comment from '../../comments/components/Comment.jsx';
+import PostBody from '../../posts/containers/Post';
+import Loading from '../../shared/components/Loading';
+import Comment from '../../comments/components/Comment';
 
-import api from '../../api.js';
+import api from '../../api';
 
 // Es lo mismo que usar React.Component
-class Post extends Component{
-  constructor(props){
+class Post extends Component {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -20,8 +20,12 @@ class Post extends Component{
     };
   }
 
-  async componentDidMount(){
-    const[
+  async componentDidMount() {
+    this.initialFecth();
+  }
+
+  async initialFecth() {
+    const [
       post,
       comments,
     ] = await Promise.all([
@@ -38,29 +42,32 @@ class Post extends Component{
       comments,
     });
   }
-  render(){
-    if(this.state.loading){
-      return <Loading />
+  render() {
+    if (this.state.loading) {
+      return <Loading />;
     }
 
-    return(
+    return (
       <section name="post">
-          <PostBody
-            {...this.state.post}
-            user={this.state.user}
-            comments={this.state.comments}
-          />
-
-          <section>
-            {this.state.comments
-              .map(comment => (
-                <Comment key={comment.id} {...comment} />
-              ))
-            }
-          </section>
+        <PostBody
+          {...this.state.post}
+          user={this.state.user}
+          comments={this.state.comments}
+        />
+        <section>
+          {this.state.comments
+            .map(comment => (
+              <Comment key={comment.id} {...comment} />
+            ))
+          }
+        </section>
       </section>
-    )
+    );
   }
 }
+
+Post.propTypes = {
+  match: PropTypes.number,
+};
 
 export default Post;
