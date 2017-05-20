@@ -9,6 +9,10 @@ import Layout from './pages/components/Layout';
 
 import messages from './messages.json';
 
+const domain = process.env.NODE_ENV === 'production'
+  ? 'https://ejemplo-react-sfs.now.sh'
+  : 'http://localhost:3001';
+
 function requestHandler(request, response) {
   const locale = request.headers['accept-language'].indexOf('es') >= 0 ? 'es' : 'en';
   // Se crea un contexto
@@ -37,6 +41,7 @@ function requestHandler(request, response) {
       <Layout
         title="Aplicación"
         content={html}
+        domain={domain}
       />,
     ),
   );

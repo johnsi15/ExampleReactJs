@@ -2,10 +2,15 @@
   "name": "EjemploReact",
   "version": "0.0.1",
   "description": "Ejemplo de react comenzando proyecto",
-  "main": "index.js",
+  "main": "./built/server/index.js",
   "scripts": {
-    "build": "webpack -w",
-    "start": "nodemon built/server/index.js",
+    "build": "set NODE_ENV=production && webpack -p",
+    "bff": "node ./built/server/index.js",
+    "watch": "webpack -w",
+    "deploy": "now",
+    "deploy:sfs": "now ./built/statics/",
+    "start": "npm run bff",
+    "watch:start": "nodemon ./built/server/index.js",
     "sfs": "serve built/statics --port 3001 --cache 0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,18 +28,23 @@
   },
   "homepage": "https://github.com/johnsi15/ExampleReactJs#readme",
   "dependencies": {
+    "babel-runtime": "^6.18.0",
     "isomorphic-fetch": "^2.2.1",
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-intl": "^2.3.0",
-    "react-router-dom": "^4.0.0-beta.8"
+    "react-router-dom": "^4.0.0-beta.8",
+    "uglifyjs-webpack-plugin": "^0.4.3"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^7.0.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
+    "babel-plugin-transform-regenerator": "^6.16.1",
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "babel-preset-es2015": "^6.18.0",
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
     "babel-preset-latest-minimal": "^1.1.2",
@@ -50,6 +60,7 @@
     "json-loader": "^0.5.4",
     "nodemon": "^1.11.0",
     "style-loader": "^0.17.0",
+    "uglify-js-brunch": "^2.10.0",
     "webpack": "^2.4.1"
   }
 }
