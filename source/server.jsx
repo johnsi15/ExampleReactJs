@@ -10,8 +10,9 @@ import Layout from './pages/components/Layout';
 import messages from './messages.json';
 
 const domain = process.env.NODE_ENV === 'production'
-  ? 'https://ejemplo-react-sfs.now.sh'
+  ? 'https://ejemplo-react.now.sh'
   : 'http://localhost:3001';
+// const domain = 'https://ejemplo-react.now.sh';
 
 function requestHandler(request, response) {
   const locale = request.headers['accept-language'].indexOf('es') >= 0 ? 'es' : 'en';

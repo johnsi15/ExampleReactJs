@@ -14,32 +14,27 @@ const nodeModules = fs
 );
 
 const config = {
-  entry: './source/server.jsx',
+  entry: ['./source/server.jsx'],
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, '../built/server'),
     publicPath: process.env.NODE_ENV === 'production'
       ? 'https://ejemplo-react-sfs.now.sh'
-      : 'http://localhost:3001/?react_perf',
+      : 'http://localhost:3001',
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
-        loader: 'eslint-loader',
         enforce: 'pre',
+        loader: 'eslint-loader',
         exclude: /(node_modules)/,
-      },
-      {
-        test: /\.json$/,
-        loader: 'json-loader',
       },
       {
         test: /\.jsx?$/,
         loader: 'babel-loader',
         exclude: /(node_modules)/,
-        query: {
-          plugins: ['transform-runtime'],
+        options: {
           presets: ['latest-minimal', 'react'],
           env: {
             production: {
@@ -58,6 +53,9 @@ const config = {
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: 'css-loader?modules',
+          publicPath: process.env.NODE_ENV === 'production'
+            ? 'https://ejemplo-react.now.sh'
+            : 'http://localhost:3001',
         }),
       },
     ],
@@ -73,17 +71,24 @@ const config = {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
       },
     }),
-    new webpack.optimize.OccurrenceOrderPlugin(true),
-    new ExtractTextPlugin({ filename: '../statics/styles.css' }),
+    new ExtractTextPlugin({
+      filename: 'styles.css',
+      disable: false,
+      allChunks: true,
+    }),
   ],
 };
 
 if (process.env.NODE_ENV === 'production') {
   config.plugins.push(
-    new webpack.optimize.DedupePlugin(),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true,
+    }),
     new webpack.optimize.UglifyJsPlugin({
+      comments: false,
       compress: {
         warnings: false,
+        screw_ie8: true,
       },
       mangle: {
         except: ['$super', '$', 'exports', 'require'],
