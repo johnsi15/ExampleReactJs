@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import Post from '../../posts/containers/Post';
 import Loading from '../../shared/components/Loading';
 import api from '../../api';
+import actions from '../../actions';
 
 import styles from './Page.css';
 
@@ -13,8 +16,6 @@ class Home extends Component {
     super(props);
 
     this.state = {
-      page: 1,
-      posts: [],
       loading: true,
     };
 
@@ -29,13 +30,14 @@ class Home extends Component {
     window.removeEventListener('scroll', this.handleScroll);
   }
   async initialFecth() {
-    const posts = await api.posts.getList(this.state.page);
+    const posts = await api.posts.getList(this.props.page);
+
+    this.props.dispatch(
+      actions.setPost(posts),
+    );
+
     // con esto enviamos los posts el numero de paginas y el loading
-    this.setState({
-      posts,
-      page: this.state.page + 1,
-      loading: false,
-    });
+    this.setState({ loading: false });
     window.addEventListener('scroll', this.handleScroll);
   }
 
@@ -53,13 +55,13 @@ class Home extends Component {
 
     return this.setState({ loading: true }, async () => {
       try {
-        const posts = await api.posts.getList(this.state.page);
+        const posts = await api.posts.getList(this.props.page);
 
-        this.setState({
-          posts: this.state.posts.concat(posts),
-          page: this.state.page + 1,
-          loading: false,
-        });
+        this.props.dispatch(
+          actions.setPost(posts),
+        );
+
+        this.setState({ loading: false });
       } catch (err) {
         console.error(err);
         this.setState({ loading: false });
@@ -68,11 +70,12 @@ class Home extends Component {
   }
 
   render() {
+    // console.log(this.props);
     return (
       <section name="Home" className={styles.section}>
         <h1><FormattedMessage id="title.home" /></h1>
         <section className={styles.list}>
-          {this.state.posts
+          {this.props.posts
             .map(post => <Post key={post.id} {...post} />)}
           {this.state.loading && (
             <Loading />
@@ -83,4 +86,20 @@ class Home extends Component {
   }
 }
 
-export default Home;
+Home.propTypes = {
+  dispatch: PropTypes.func,
+  posts: PropTypes.arrayOf(PropTypes.object),
+};
+
+function mapStateToProps(state) {
+  return {
+    posts: state.posts.entities,
+    page: state.posts.page,
+  };
+}
+
+// function mapDispatchToProps(dispatch) {
+//   return { actions: bindActionCreators(actions, dispatch) };
+// }
+
+export default connect(mapStateToProps)(Home);

@@ -72,7 +72,7 @@ const config = {
       },
     }),
     new ExtractTextPlugin({
-      filename: 'styles.css',
+      filename: '../statics/styles.css',
       disable: false,
       allChunks: true,
     }),
